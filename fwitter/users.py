@@ -13,7 +13,7 @@ def add(username, email, password):
     verifyKey = keygen()
     try:
         result = users.insert_one({
-            'name': username,
+            'username': username,
             'email': email,
             'password': password,
             'verified': False,
@@ -44,3 +44,15 @@ def verify(email, key):
         return result.acknowledged
     else:
         return False
+
+def login(username, password):
+    users = MongoClient()['Eliza']['User']
+    userDoc = users.find_one({
+        'username': username,
+        'password': password
+    })
+
+    if userDoc is not None and userDoc['verified'] == True:
+        return str(userDoc['_id'])
+    else:
+        return None
