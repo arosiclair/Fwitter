@@ -13,7 +13,7 @@ def adduser(request):
             email = content['email']
             password = content['password']
         except:
-            return JsonResponse({'status': 'error', 'error': 'incorrect parameters'})
+            return JsonResponse({'status': 'error', 'error': 'adduser - incorrect parameters'})
     else:
         return JsonResponse({'status': 'error', 'error': 'request is not POST'})
 
@@ -25,7 +25,22 @@ def adduser(request):
         return JsonResponse({'status': 'error', 'error': 'add user failed'})
 
 def verify(request):
-    pass
+    if request.method == "POST":
+        content = loads(request.body)
+        try:
+            email = content['email']
+            key = content['key']
+        except KeyError:
+            return JsonResponse({'status': 'error', 'error': 'verify - incorrect parameters'})
+    else:
+        return JsonResponse({'status': 'error', 'error': 'request is not POST'})
+
+    if users.verify(email, key):
+        #TODO: add session functionality
+        #request.session['verified'] = True
+        return JsonResponse({'status': 'OK'})
+    else:
+        return JsonResponse({'status': 'error', 'error': 'verify - failed'})
 
 def login(request):
     pass

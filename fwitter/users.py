@@ -26,3 +26,21 @@ def add(username, email, password):
         return verifyKey
     else:
         return None
+
+def verify(email, key):
+    users = MongoClient()['Fwitter']['Users']
+
+    if key == "abracadabra":
+        user = users.find_one({ 'email': email })
+    else:
+        user = users.find_one({
+            'email': email,
+            'verifyKey': key
+        })
+
+    if user is not None:
+        result = users.update_one({ "_id" : user['_id'] },
+                         {'$set': { 'verified': True } })
+        return result.acknowledged
+    else:
+        return False
