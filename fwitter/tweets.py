@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 from bson.objectid import ObjectId
 
-from time import time
+import time
 
 from . import users
 
@@ -13,7 +13,7 @@ def add(userId, tweetContent):
         'userId': userId,
         'username': users.getUsername(userId),
         'content': tweetContent,
-        'timestamp': int(time())
+        'timestamp': int(time.time())
     })
 
     if result.acknowledged:

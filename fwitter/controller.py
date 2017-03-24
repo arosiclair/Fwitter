@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 
 from json import loads
+import time
 
 from . import users, tweets
 
@@ -111,15 +112,9 @@ def search(request):
 
     if request.method == "POST":
         content = loads(request.body)
-        try:
-            timestamp = content['timestamp']
-        except KeyError:
-            return JsonResponse({'status': 'error', 'error': 'additem - incorrect parameters'})
-        try:
-            limit = int(content['limit'])
-            if limit < 1 or limit > 100:
-                limit = 25
-        except KeyError:
+        timestamp = content.get('timestamp', int(time.time()))
+        limit = content.get('limit', 25)
+        if limit < 0 or limit > 100:
             limit = 25
     else:
         return JsonResponse({'status': 'error', 'error': 'request is not POST'})
