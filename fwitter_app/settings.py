@@ -25,7 +25,7 @@ SECRET_KEY = 'e_j(=mes-=z)4!lk*j@9!2&b=go@bx4br3y&ekp67w^*ek!=8!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'arosiclair.cse356.compas.cs.stonybrook.edu']
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.125']
 
 
 # Application definition
