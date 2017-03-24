@@ -103,3 +103,30 @@ def getitem(request, tweetId):
         })
     else:
         return JsonResponse({'status': 'error', 'error': 'tweet GET failed'})
+
+def search(request):
+    userId = request.session.get('userId', None)
+    if userId is None:
+        return JsonResponse({'status': 'error', 'error': 'search - user not logged in'})
+
+    if request.method == "POST":
+        content = loads(request.body)
+        try:
+            timestamp = content['timestamp']
+        except KeyError:
+            return JsonResponse({'status': 'error', 'error': 'additem - incorrect parameters'})
+        try:
+            limit = int(content['limit'])
+            if limit < 1 or limit > 100:
+                limit = 25
+        except KeyError:
+            limit = 25
+    else:
+        return JsonResponse({'status': 'error', 'error': 'request is not POST'})
+
+    tweetList = tweets.search(timestamp, limit)
+    return JsonResponse({
+        'status': 'OK',
+        'items': tweetList
+    })
+

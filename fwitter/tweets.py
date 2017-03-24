@@ -27,3 +27,14 @@ def get(tweetId):
         del result['_id']
         result['id'] = tweetId
         return result
+
+def search(timestamp, limit):
+    results = tweets.find({'timestamp': {'$lte': timestamp}}, limit=limit)
+    resultTweets = []
+    for tweet in results:
+        id = str(tweet['_id'])
+        del tweet['_id']
+        tweet['id'] = id
+        resultTweets.append(tweet)
+
+    return resultTweets
