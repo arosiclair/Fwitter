@@ -46,7 +46,7 @@ def verify(email, key):
         return False
 
 def login(username, password):
-    users = MongoClient()['Eliza']['User']
+    users = MongoClient()['Fwitter']['Users']
     userDoc = users.find_one({
         'username': username,
         'password': password
