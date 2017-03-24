@@ -9,15 +9,12 @@ from . import users
 tweets = MongoClient()['Fwitter']['Tweets']
 
 def add(userId, tweetContent):
-    try:
-        result = tweets.insert_one({
-            'userId': userId,
-            'username': users.getUsername(userId),
-            'content': tweetContent,
-            'timestamp': int(time())
-        })
-    except DuplicateKeyError:
-        return None
+    result = tweets.insert_one({
+        'userId': userId,
+        'username': users.getUsername(userId),
+        'content': tweetContent,
+        'timestamp': int(time())
+    })
 
     if result.acknowledged:
         return str(result.inserted_id)
