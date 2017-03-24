@@ -3,7 +3,7 @@ from django.http import JsonResponse
 
 from json import loads
 
-from . import users
+from . import users, tweets
 
 def adduser(request):
     if request.method == "POST":
@@ -67,3 +67,23 @@ def logout(request):
     except KeyError:
         pass
     return JsonResponse({ 'status': 'OK'})
+
+def additem(request):
+    if request.method == "POST":
+        content = loads(request.body)
+        try:
+            tweetContent = content['content']
+        except KeyError:
+            return JsonResponse({'status': 'error', 'error': 'additem - incorrect parameters'})
+    else:
+        return JsonResponse({'status': 'error', 'error': 'request is not POST'})
+
+    userId = request.session.get('userId', None)
+    if userId is None:
+        return JsonResponse({'status': 'error', 'error': 'additem - user not logged in'})
+
+    tweetId = tweets.add(userId, tweetContent)
+    if tweetId is not None:
+        return JsonResponse({'status': 'OK', 'id': tweetId})
+    else:
+        return JsonResponse({'status': 'error', 'error': 'additem - tweet post failed'})
