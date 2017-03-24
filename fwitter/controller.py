@@ -5,6 +5,9 @@ from json import loads
 
 from . import users, tweets
 
+def index(request):
+    pass
+
 def adduser(request):
     if request.method == "POST":
         content = loads(request.body)
