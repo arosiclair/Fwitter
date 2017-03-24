@@ -7,9 +7,9 @@ from datetime import datetime
 
 from utils import keygen
 
-def add(username, email, password):
-    users = MongoClient()['Fwitter']['Users']
+users = MongoClient()['Fwitter']['Users']
 
+def add(username, email, password):
     verifyKey = keygen()
     try:
         result = users.insert_one({
@@ -28,8 +28,6 @@ def add(username, email, password):
         return None
 
 def verify(email, key):
-    users = MongoClient()['Fwitter']['Users']
-
     if key == "abracadabra":
         user = users.find_one({ 'email': email })
     else:
@@ -46,7 +44,6 @@ def verify(email, key):
         return False
 
 def login(username, password):
-    users = MongoClient()['Fwitter']['Users']
     userDoc = users.find_one({
         'username': username,
         'password': password
@@ -54,5 +51,12 @@ def login(username, password):
 
     if userDoc is not None and userDoc['verified'] == True:
         return str(userDoc['_id'])
+    else:
+        return None
+
+def getUsername(userId):
+    user = users.find_one({'_id': ObjectId(userId)})
+    if user is not None:
+        return user['username']
     else:
         return None

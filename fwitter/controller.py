@@ -90,3 +90,16 @@ def additem(request):
         return JsonResponse({'status': 'OK', 'id': tweetId})
     else:
         return JsonResponse({'status': 'error', 'error': 'additem - tweet post failed'})
+
+def getitem(request, tweetId):
+    if request.method != "GET":
+        return JsonResponse({'status': 'error', 'error': 'request is not GET'})
+
+    result = tweets.get(tweetId)
+    if result is not None:
+        return JsonResponse({
+            'status': 'OK',
+            'item': result
+        })
+    else:
+        return JsonResponse({'status': 'error', 'error': 'tweet GET failed'})
