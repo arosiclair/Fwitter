@@ -9,5 +9,5 @@ urlpatterns = [
     url(r'^login$', controller.login),
     url(r'^logout$', controller.logout),
     url(r'^additem$', controller.additem),
-    url(r'^getitem/(?P<tweetId>[a-z0-9]+)$', controller.getitem),
+    url(r'^item/(?P<tweetId>[a-z0-9]+)$', controller.getitem),
 ]
