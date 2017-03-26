@@ -109,4 +109,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 SESSION_ENGINE = "django.contrib.sessions.backends.file"
-SESSION_FILE_PATH = '../tmp'
+SESSION_FILE_PATH = './tmp'

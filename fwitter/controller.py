@@ -7,7 +7,7 @@ import time
 from . import users, tweets
 
 def index(request):
-    pass
+    return render(request, 'fwitter/index.html')
 
 def adduser(request):
     if request.method == "POST":
@@ -124,4 +124,3 @@ def search(request):
         'status': 'OK',
         'items': tweetList
     })
-

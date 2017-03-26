@@ -1,0 +1,16 @@
+body{
+    margin: 0 50px;
+}
+
+input {
+    display: block;
+    margin-bottom: 5px;
+}
+
+form {
+    display: none;
+}
+
+#responseDiv {
+    display: none;
+}
