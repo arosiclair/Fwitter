@@ -28,6 +28,11 @@ def get(tweetId):
         result['id'] = tweetId
         return result
 
+def delete(userId, tweetId):
+    result = tweets.find_one_and_delete({'_id': ObjectId(tweetId), 'userId': userId})
+    if result is not None:
+        return True
+
 def search(timestamp, limit):
     results = tweets.find({'timestamp': {'$lte': timestamp}}, limit=limit)
     resultTweets = []

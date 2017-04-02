@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from pymongo.errors import DuplicateKeyError
+from pymongo.errors import DuplicateKeyError, InvalidOperation
 from bson.objectid import ObjectId
 
 import string, random
@@ -17,7 +17,9 @@ def add(username, email, password):
             'email': email,
             'password': password,
             'verified': False,
-            'verifyKey': verifyKey
+            'verifyKey': verifyKey,
+            'following': [],
+            'followers': []
         })
     except DuplicateKeyError:
         return None
@@ -60,3 +62,37 @@ def getUsername(userId):
         return user['username']
     else:
         return None
+
+def getId(username):
+    user = users.find_one({'username': username})
+    if user is not None:
+        return str(user['_id'])
+    else:
+        return None
+
+def follow(userId, followName):
+    user = users.find_one({'_id': ObjectId(userId)})
+    followed = users.find_one({'username': followName})
+
+    if user is None or followed is None:
+        return False
+    else:
+        userResult = users.update_one({'_id': user['_id']},
+                         {'$addToSet': {'following': str(followed['_id'])}})
+        followedResult = users.update_one({'_id': followed['_id']},
+                         {'$addToSet': {'followers': str(user['_id'])}})
+
+        try:
+            if userResult.modified_count == 1 and followedResult.modified_count == 1:
+                return True
+            else:
+                return False
+        except InvalidOperation:
+            return False
+
+def getInfo(username):
+    user = users.find_one({'username': username})
+    if user is not None:
+        return {'email': user['email'],
+                'followers': len(user['followers']),
+                'following': len(user['following'])}

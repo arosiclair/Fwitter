@@ -93,17 +93,31 @@ def additem(request):
         return JsonResponse({'status': 'error', 'error': 'additem - tweet post failed'})
 
 def getitem(request, tweetId):
-    if request.method != "GET":
-        return JsonResponse({'status': 'error', 'error': 'request is not GET'})
-
-    result = tweets.get(tweetId)
-    if result is not None:
-        return JsonResponse({
-            'status': 'OK',
-            'item': result
-        })
+    if request.method == "GET":
+        result = tweets.get(tweetId)
+        if result is not None:
+            return JsonResponse({
+                'status': 'OK',
+                'item': result
+            })
+        else:
+            return JsonResponse({'status': 'error', 'error': 'tweet GET failed'})
+    elif request.method == "DELETE":
+        return deleteitem(request, tweetId)
     else:
-        return JsonResponse({'status': 'error', 'error': 'tweet GET failed'})
+        return JsonResponse({'status': 'error', 'error': 'item - request method {0} is not allowed'.format(request.method)})
+
+def deleteitem(request, tweetId):
+    userId = request.session.get("userId", None)
+    if userId is None:
+        return JsonResponse({'status': 'error', 'error': 'delete - user not logged in'})
+
+    result = tweets.delete(userId, tweetId)
+    if result:
+        return JsonResponse({'status': 'OK'})
+    else:
+        return JsonResponse({'status': 'error',
+                             'error': 'delete - tweetId {0} from user {1} was not found'.format(tweetId, userId)})
 
 def search(request):
     userId = request.session.get('userId', None)
@@ -117,10 +131,42 @@ def search(request):
         if limit < 0 or limit > 100:
             limit = 25
     else:
-        return JsonResponse({'status': 'error', 'error': 'request is not POST'})
+        return JsonResponse({'status': 'error', 'error': 'search - request is not POST'})
 
     tweetList = tweets.search(timestamp, limit)
     return JsonResponse({
         'status': 'OK',
         'items': tweetList
     })
+
+def follow(request):
+    userId = request.session.get('userId', None)
+    if userId is None:
+        return JsonResponse({'status': 'error', 'error': 'follow - user not logged in'})
+
+    if request.method == "POST":
+        content = loads(request.body)
+        try:
+            username = content['username']
+        except KeyError:
+            return JsonResponse({'status': 'error', 'error': 'follow - no username provided'})
+        follow = content.get('follow', True)
+
+        result = users.follow(userId, username)
+        if result:
+            return JsonResponse({'status': 'OK'})
+        else:
+            return JsonResponse({'status': 'error', 'error': "follow - a user wasn't found or write failed"})
+    else:
+        return JsonResponse({'status': 'error', 'error': 'follow - request is not POST'})
+
+def getUserInfo(request, username):
+    if request.method == "GET":
+        result = users.getInfo(username)
+        if result is not None:
+            return JsonResponse({'status': 'OK',
+                                 'user': result})
+        else:
+            return JsonResponse({'status': 'error', 'error': 'username - user not found'})
+    else:
+        return JsonResponse({'status': 'error', 'error': 'username - request is not GET'})

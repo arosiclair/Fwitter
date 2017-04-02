@@ -11,4 +11,6 @@ urlpatterns = [
     url(r'^additem$', controller.additem),
     url(r'^item/(?P<tweetId>[a-z0-9]+)$', controller.getitem),
     url(r'^search$', controller.search),
+    url(r'^follow$', controller.follow),
+    url(r'^username/(?P<username>[a-zA-Z0-9]+)', controller.getUserInfo)
 ]
