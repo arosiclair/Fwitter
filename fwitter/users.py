@@ -78,7 +78,7 @@ def follow(userId, followName):
         return False
     else:
         userResult = users.update_one({'_id': user['_id']},
-                         {'$addToSet': {'following': str(followed['username'])}})
+                         {'$addToSet': {'following': followName}})
         followedResult = users.update_one({'_id': followed['_id']},
                          {'$addToSet': {'followers': str(user['username'])}})
 
