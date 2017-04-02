@@ -170,3 +170,31 @@ def getUserInfo(request, username):
             return JsonResponse({'status': 'error', 'error': 'username - user not found'})
     else:
         return JsonResponse({'status': 'error', 'error': 'username - request is not GET'})
+
+def getUserFollowers(request, username):
+    if request.method == "GET":
+        limit = request.GET.get('limit', 50)
+        if limit > 200 or limit < 0:
+            limit = 50
+
+        result = users.getFollowers(username, limit)
+        if result is not None:
+            return JsonResponse({'status': 'OK', 'followers': result})
+        else:
+            return JsonResponse({'status': 'error', 'error': 'followers - user not found'})
+    else:
+        return JsonResponse({'status': 'error', 'error': 'followers - request is not GET'})
+
+def getUserFollowing(request, username):
+    if request.method == "GET":
+        limit = request.GET.get('limit', 50)
+        if limit > 200 or limit < 0:
+            limit = 50
+
+        result = users.getFollowing(username, limit)
+        if result is not None:
+            return JsonResponse({'status': 'OK', 'following': result})
+        else:
+            return JsonResponse({'status': 'error', 'error': 'following - user not found'})
+    else:
+        return JsonResponse({'status': 'error', 'error': 'following - request is not GET'})

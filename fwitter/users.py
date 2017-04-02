@@ -78,9 +78,9 @@ def follow(userId, followName):
         return False
     else:
         userResult = users.update_one({'_id': user['_id']},
-                         {'$addToSet': {'following': str(followed['_id'])}})
+                         {'$addToSet': {'following': str(followed['username'])}})
         followedResult = users.update_one({'_id': followed['_id']},
-                         {'$addToSet': {'followers': str(user['_id'])}})
+                         {'$addToSet': {'followers': str(user['username'])}})
 
         try:
             if userResult.modified_count == 1 and followedResult.modified_count == 1:
@@ -96,3 +96,13 @@ def getInfo(username):
         return {'email': user['email'],
                 'followers': len(user['followers']),
                 'following': len(user['following'])}
+
+def getFollowers(username, limit):
+    user = users.find_one(({'username': username}))
+    if user is not None:
+        return user['followers'][: limit]
+
+def getFollowing(username, limit):
+    user = users.find_one(({'username': username}))
+    if user is not None:
+        return user['following'][: limit]
