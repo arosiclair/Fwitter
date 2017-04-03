@@ -60,6 +60,7 @@ def login(request):
     if userId is not None:
         # Save MongoDB doc ID in cookie data for user
         request.session['userId'] = userId
+        request.session['username'] = username
         return JsonResponse({'status': 'OK'})
     else:
         return JsonResponse({'status': 'error', 'error': 'login - failed'})
@@ -67,12 +68,19 @@ def login(request):
 def logout(request):
     try:
         del request.session['userId']
+        del request.session['username']
         # request.session['loggedOut'] = True
     except KeyError:
         pass
     return JsonResponse({ 'status': 'OK'})
 
 def additem(request):
+    try:
+        userId = request.session['userId']
+        username = request.session['username']
+    except KeyError:
+        return JsonResponse({'status': 'error', 'error': 'additem - user not logged in'})
+
     if request.method == "POST":
         content = loads(request.body)
         try:
@@ -82,11 +90,7 @@ def additem(request):
     else:
         return JsonResponse({'status': 'error', 'error': 'request is not POST'})
 
-    userId = request.session.get('userId', None)
-    if userId is None:
-        return JsonResponse({'status': 'error', 'error': 'additem - user not logged in'})
-
-    tweetId = tweets.add(userId, tweetContent)
+    tweetId = tweets.add(userId, username, tweetContent)
     if tweetId is not None:
         return JsonResponse({'status': 'OK', 'id': tweetId})
     else:
@@ -120,8 +124,8 @@ def deleteitem(request, tweetId):
                              'error': 'delete - tweetId {0} from user {1} was not found'.format(tweetId, userId)})
 
 def search(request):
-    userId = request.session.get('userId', None)
-    if userId is None:
+    username = request.session.get('username', None)
+    if username is None:
         return JsonResponse({'status': 'error', 'error': 'search - user not logged in'})
 
     if request.method == "POST":
@@ -130,10 +134,13 @@ def search(request):
         limit = content.get('limit', 25)
         if limit < 0 or limit > 100:
             limit = 25
+        query = content.get('q', None)
+        filterUsername = content.get('username', None)
+        following = content.get('following', True)
     else:
         return JsonResponse({'status': 'error', 'error': 'search - request is not POST'})
 
-    tweetList = tweets.search(timestamp, limit)
+    tweetList = tweets.search(username, timestamp, limit, query, filterUsername, following)
     return JsonResponse({
         'status': 'OK',
         'items': tweetList

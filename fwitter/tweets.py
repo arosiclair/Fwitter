@@ -2,16 +2,16 @@ from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 from bson.objectid import ObjectId
 
-import time
+import time, sys
 
 from . import users
 
 tweets = MongoClient()['Fwitter']['Tweets']
 
-def add(userId, tweetContent):
+def add(userId, username, tweetContent):
     result = tweets.insert_one({
         'userId': userId,
-        'username': users.getUsername(userId),
+        'username': username,
         'content': tweetContent,
         'timestamp': int(time.time())
     })
@@ -33,8 +33,23 @@ def delete(userId, tweetId):
     if result is not None:
         return True
 
-def search(timestamp, limit):
-    results = tweets.find({'timestamp': {'$lte': timestamp}}, limit=limit)
+def search(username, timestamp, limit, query, filtername, following):
+    filter = {'timestamp': {'$lte': timestamp}}
+
+    if following:
+        followedUsers = users.getFollowing(username, sys.maxint)
+        if filtername is not None:
+            if filtername in followedUsers:
+                filter['username'] = filtername
+            else:
+                return []
+        else:
+            filter['username'] = {'$in': followedUsers}
+    elif filtername is not None:
+        filter['username'] = filtername
+
+
+    results = tweets.find(filter, limit=limit)
     resultTweets = []
     for tweet in results:
         id = str(tweet['_id'])
