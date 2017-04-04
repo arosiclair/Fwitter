@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from fwitter import utils
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_mongoengine',
     'fwitter'
 ]
 
@@ -108,5 +110,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-SESSION_ENGINE = "django.contrib.sessions.backends.file"
-SESSION_FILE_PATH = './tmp'
+MONGODB_DATABASES = {
+    "default": {
+        "name": utils.mdbName,
+        "host": utils.mdbHost,
+        "password": utils.mdbPass,
+        "username": utils.mdbUser,
+    },
+}
+
+SESSION_ENGINE = "django_mongoengine.sessions"
+SESSION_SERIALIZER = 'django_mongoengine.sessions.BSONSerializer'
+
