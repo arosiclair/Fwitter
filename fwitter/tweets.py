@@ -49,13 +49,21 @@ def search(username, timestamp, limit, query, filtername, following):
     elif filtername is not None:
         filter['username'] = filtername
 
-
     results = tweets.find(filter, limit=limit)
     resultTweets = []
-    for tweet in results:
-        id = str(tweet['_id'])
-        del tweet['_id']
-        tweet['id'] = id
-        resultTweets.append(tweet)
+    if query is not None:
+        for tweet in results:
+            if query not in tweet['content']:
+                continue
+            id = str(tweet['_id'])
+            del tweet['_id']
+            tweet['id'] = id
+            resultTweets.append(tweet)
+    else:
+        for tweet in results:
+            id = str(tweet['_id'])
+            del tweet['_id']
+            tweet['id'] = id
+            resultTweets.append(tweet)
 
     return resultTweets
