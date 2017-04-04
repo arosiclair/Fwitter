@@ -5,9 +5,9 @@ from bson.objectid import ObjectId
 import string, random
 from datetime import datetime
 
-from utils import keygen
+from utils import *
 
-users = MongoClient()['Fwitter']['Users']
+users = MongoClient(mongoDBUri)['Fwitter']['Users']
 
 def add(username, email, password):
     verifyKey = keygen()
