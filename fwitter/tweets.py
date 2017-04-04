@@ -5,8 +5,9 @@ from bson.objectid import ObjectId
 import time, sys
 
 from . import users
+from utils import *
 
-tweets = MongoClient()['Fwitter']['Tweets']
+tweets = MongoClient(mongoDBUri)['Fwitter']['Tweets']
 
 def add(userId, username, tweetContent):
     result = tweets.insert_one({
