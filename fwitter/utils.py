@@ -7,4 +7,5 @@ mdbHost = "localhost"
 mdbPort = 27017
 mdbUser = "arosiclair"
 mdbPass = "cse356"
-mongoDBUri = "mongodb://{0}:{1}@{2}:{3}".format(mdbUser, mdbPass, mdbHost, mdbPort)
+mdbName = "Fwitter"
+mongoDBUri = "mongodb://{0}:{1}@{2}:{3}/{4}".format(mdbUser, mdbPass, mdbHost, mdbPort, mdbName)
