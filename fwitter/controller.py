@@ -186,7 +186,7 @@ def getUserFollowers(request, username):
 
         result = users.getFollowers(username, limit)
         if result is not None:
-            return JsonResponse({'status': 'OK', 'followers': result})
+            return JsonResponse({'status': 'OK', 'users': result})
         else:
             return JsonResponse({'status': 'error', 'error': 'followers - user not found'})
     else:
@@ -200,7 +200,7 @@ def getUserFollowing(request, username):
 
         result = users.getFollowing(username, limit)
         if result is not None:
-            return JsonResponse({'status': 'OK', 'following': result})
+            return JsonResponse({'status': 'OK', 'users': result})
         else:
             return JsonResponse({'status': 'error', 'error': 'following - user not found'})
     else:
