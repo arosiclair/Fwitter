@@ -70,18 +70,30 @@ def getId(username):
     else:
         return None
 
-def follow(userId, followName):
+def follow(userId, followName, follow):
     user = users.find_one({'_id': ObjectId(userId)})
     followed = users.find_one({'username': followName})
 
     if user is None or followed is None:
         return False
-    else:
+    elif follow:
         userResult = users.update_one({'_id': user['_id']},
                          {'$addToSet': {'following': followName}})
         followedResult = users.update_one({'_id': followed['_id']},
                          {'$addToSet': {'followers': str(user['username'])}})
 
+        try:
+            if userResult.modified_count == 1 and followedResult.modified_count == 1:
+                return True
+            else:
+                return False
+        except InvalidOperation:
+            return False
+    else:
+        userResult = users.update_one({'_id': user['_id']},
+                                      {'$pull': {'following': followName}})
+        followedResult = users.update_one({'_id': followed['_id']},
+                                          {'$pull': {'followers': str(user['username'])}})
         try:
             if userResult.modified_count == 1 and followedResult.modified_count == 1:
                 return True

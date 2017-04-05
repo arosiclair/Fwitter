@@ -159,7 +159,7 @@ def follow(request):
             return JsonResponse({'status': 'error', 'error': 'follow - no username provided'})
         follow = content.get('follow', True)
 
-        result = users.follow(userId, username)
+        result = users.follow(userId, username, follow)
         if result:
             return JsonResponse({'status': 'OK'})
         else:
