@@ -9,15 +9,26 @@ from utils import *
 
 tweets = MongoClient(mongoDBUri)['Fwitter']['Tweets']
 
-def add(userId, username, tweetContent):
-    result = tweets.insert_one({
+def add(userId, username, tweetContent, parentId):
+    tweet = {
         'userId': userId,
         'username': username,
         'content': tweetContent,
-        'timestamp': int(time.time())
-    })
+        'timestamp': int(time.time()),
+        'parentId': ObjectId(parentId)
+    }
+    if parentId is not None:
+        tweet['parentId'] = parentId
+
+    result = tweets.insert_one(tweet)
 
     if result.acknowledged:
+        # if parentId is not None:
+        #     result2 = tweets.find_one_and_update({'_id': ObjectId(parentId)},
+        #                                {'$addToSet': {'replies': result.inserted_id}})
+        #     if result2 is not None:
+        #         return str(result.inserted_id)
+        # else:
         return str(result.inserted_id)
     else:
         return None
@@ -34,7 +45,7 @@ def delete(userId, tweetId):
     if result is not None:
         return True
 
-def search(username, timestamp, limit, query, filtername, following):
+def search(username, timestamp, limit, query, filtername, following, parentId, replies):
     filter = {'timestamp': {'$lte': timestamp}}
 
     if following:
@@ -49,21 +60,23 @@ def search(username, timestamp, limit, query, filtername, following):
     elif filtername is not None:
         filter['username'] = filtername
 
-    results = tweets.find(filter, limit=limit)
-    resultTweets = []
     if query is not None:
-        for tweet in results:
-            if query not in tweet['content']:
-                continue
-            id = str(tweet['_id'])
-            del tweet['_id']
-            tweet['id'] = id
-            resultTweets.append(tweet)
-    else:
-        for tweet in results:
-            id = str(tweet['_id'])
-            del tweet['_id']
-            tweet['id'] = id
-            resultTweets.append(tweet)
+        filter['$text'] = {'$search': query}
 
-    return resultTweets
+    if parentId is not None:
+        filter['parentId'] = parentId
+
+    filter['parentId'] = {'$exists': True} if replies else {'$exists': False}
+
+    results = tweets.find(filter, limit=limit)
+    for tweet in results:
+        tweet['id'] = str(tweet['_id'])
+        del tweet['_id']
+
+    return results
+
+def likeTweet(tweetId, like):
+    incr = 1 if like else -1
+    result = tweets.find_one_and_update({'_id': ObjectId(tweetId)},
+                                        {'$inc': {'likes': incr}})
+    return True if result is not None else False

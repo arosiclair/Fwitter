@@ -85,12 +85,13 @@ def additem(request):
         content = loads(request.body)
         try:
             tweetContent = content['content']
+            parent = content.get('parent', None)
         except KeyError:
             return JsonResponse({'status': 'error', 'error': 'additem - incorrect parameters'})
     else:
-        return JsonResponse({'status': 'error', 'error': 'request is not POST'})
+        return JsonResponse({'status': 'error', 'error': 'additem - request is not POST'})
 
-    tweetId = tweets.add(userId, username, tweetContent)
+    tweetId = tweets.add(userId, username, tweetContent, parent)
     if tweetId is not None:
         return JsonResponse({'status': 'OK', 'id': tweetId})
     else:
@@ -110,6 +111,22 @@ def getitem(request, tweetId):
         return deleteitem(request, tweetId)
     else:
         return JsonResponse({'status': 'error', 'error': 'item - request method {0} is not allowed'.format(request.method)})
+
+def likeitem(request, tweetId):
+    username = request.session.get('username', None)
+    if username is None:
+        return JsonResponse({'status': 'error', 'error': 'likeitem - user not logged in'})
+
+    if request.method == "POST":
+        content = loads(request.body)
+        like = content.get('like', True)
+
+        if tweets.likeTweet(tweetId, like):
+            return JsonResponse({'status': 'OK'})
+        else:
+            return JsonResponse({'status': 'error', 'error': 'likeitem - tweet {0} not found'.format(tweetId)})
+    else:
+        return JsonResponse({'status': 'error', 'error': 'likeitem - request is not POST'})
 
 def deleteitem(request, tweetId):
     userId = request.session.get("userId", None)
@@ -137,10 +154,12 @@ def search(request):
         query = content.get('q', None)
         filterUsername = content.get('username', None)
         following = content.get('following', True)
+        parentId = content.get('parent', None)
+        replies = content.get('replies', True)
     else:
         return JsonResponse({'status': 'error', 'error': 'search - request is not POST'})
 
-    tweetList = tweets.search(username, timestamp, limit, query, filterUsername, following)
+    tweetList = tweets.search(username, timestamp, limit, query, filterUsername, following, parentId, replies)
     return JsonResponse({
         'status': 'OK',
         'items': tweetList
@@ -203,5 +222,17 @@ def getUserFollowing(request, username):
             return JsonResponse({'status': 'OK', 'users': result})
         else:
             return JsonResponse({'status': 'error', 'error': 'following - user not found'})
+    else:
+        return JsonResponse({'status': 'error', 'error': 'following - request is not GET'})
+
+def addmedia(request):
+    if request.method == "POST":
+        try:
+            contentsStr = request.FILES['content'].read()
+        except:
+            return JsonResponse({'status': 'error', 'error': 'addmedia - content key error'})
+
+        mediaContents = bytearray(contentsStr)
+        
     else:
         return JsonResponse({'status': 'error', 'error': 'following - request is not GET'})

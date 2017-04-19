@@ -10,9 +10,11 @@ urlpatterns = [
     url(r'^logout$', controller.logout),
     url(r'^additem$', controller.additem),
     url(r'^item/(?P<tweetId>[a-z0-9]+)$', controller.getitem),
+    url(r'^item/(?P<tweetId>[a-z0-9]+)/like$', controller.likeitem),
     url(r'^search$', controller.search),
     url(r'^follow$', controller.follow),
     url(r'^user/(?P<username>[a-zA-Z0-9]+)/followers', controller.getUserFollowers),
     url(r'^user/(?P<username>[a-zA-Z0-9]+)/following', controller.getUserFollowing),
     url(r'^user/(?P<username>[a-zA-Z0-9]+)', controller.getUserInfo),
+    url(r'^addmedia$',controller.addmedia),
 ]
