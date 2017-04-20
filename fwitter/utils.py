@@ -15,4 +15,4 @@ mediaHost = "localhost"
 mediaPort = 27017
 mediaName = "Fwitter"
 
-mediaUri = "mongodb://{0}:{1}/{2}".format(mediaHost, mediaPort, mediaPort)
+mediaUri = "mongodb://{0}:{1}/{2}".format(mediaHost, mediaPort, mediaName)
