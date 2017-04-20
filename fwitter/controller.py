@@ -5,6 +5,7 @@ from json import loads
 import time
 
 from . import users, tweets, media
+from fwitter_app.logger import log
 
 def index(request):
     return render(request, 'fwitter/index.html')
@@ -148,6 +149,7 @@ def search(request):
 
     if request.method == "POST":
         content = loads(request.body)
+        log.debug("Search - " + content)
         timestamp = content.get('timestamp', int(time.time()))
         limit = content.get('limit', 25)
         if limit < 0 or limit > 100:

@@ -127,3 +127,4 @@ MONGODB_DATABASES = {
 SESSION_ENGINE = "django_mongoengine.sessions"
 SESSION_SERIALIZER = 'django_mongoengine.sessions.BSONSerializer'
 
+from .logger import LOGGING
