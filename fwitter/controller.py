@@ -149,7 +149,7 @@ def search(request):
 
     if request.method == "POST":
         content = loads(request.body)
-        log.debug("Search - " + content)
+        log.debug("Search - " + str(content))
         timestamp = content.get('timestamp', int(time.time()))
         limit = content.get('limit', 25)
         if limit < 0 or limit > 100:
