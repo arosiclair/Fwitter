@@ -65,7 +65,7 @@ def search(username, timestamp, limit, query, filtername, following, parentId, r
         filter['username'] = filtername
 
     if query is not None:
-        filter['$text'] = {'$search': '"{0}"'.format(query)}
+        filter['$text'] = {'$search': query}
 
     if parentId is not None:
         filter['parentId'] = parentId
