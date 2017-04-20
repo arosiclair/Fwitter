@@ -249,6 +249,6 @@ def getmedia(request, mediaId):
         if mediaBinary is not None:
             return HttpResponse(mediaBinary, content_type='image/jpeg')
         else:
-            JsonResponse({'status': 'error', 'error': 'getmedia - mediaId: {0} not found'.format(mediaId)})
+            return JsonResponse({'status': 'error', 'error': 'getmedia - mediaId: {0} not found'.format(mediaId)})
     else:
         return JsonResponse({'status': 'error', 'error': 'getmedia - request is not GET'})
