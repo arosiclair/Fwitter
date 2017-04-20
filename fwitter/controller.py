@@ -86,12 +86,13 @@ def additem(request):
         try:
             tweetContent = content['content']
             parent = content.get('parent', None)
+            mediaIds = content.get('media', None)
         except KeyError:
             return JsonResponse({'status': 'error', 'error': 'additem - incorrect parameters'})
     else:
         return JsonResponse({'status': 'error', 'error': 'additem - request is not POST'})
 
-    tweetId = tweets.add(userId, username, tweetContent, parent)
+    tweetId = tweets.add(userId, username, tweetContent, parent, mediaIds)
     if tweetId is not None:
         return JsonResponse({'status': 'OK', 'id': tweetId})
     else:

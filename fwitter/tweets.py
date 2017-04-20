@@ -9,7 +9,7 @@ from utils import *
 
 tweets = MongoClient(mongoDBUri)['Fwitter']['Tweets']
 
-def add(userId, username, tweetContent, parentId):
+def add(userId, username, tweetContent, parentId, mediaIds):
     tweet = {
         'userId': userId,
         'username': username,
@@ -18,6 +18,8 @@ def add(userId, username, tweetContent, parentId):
     }
     if parentId is not None:
         tweet['parentId'] = parentId
+    if mediaIds is not None:
+        tweet['media'] = mediaIds
 
     result = tweets.insert_one(tweet)
 
