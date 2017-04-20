@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^user/(?P<username>[a-zA-Z0-9]+)/following', controller.getUserFollowing),
     url(r'^user/(?P<username>[a-zA-Z0-9]+)', controller.getUserInfo),
     url(r'^addmedia$',controller.addmedia),
+    url(r'^media/(?P<mediaId>[a-zA-Z0-9]+)$', controller.getmedia),
 ]

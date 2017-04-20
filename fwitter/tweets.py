@@ -15,7 +15,6 @@ def add(userId, username, tweetContent, parentId):
         'username': username,
         'content': tweetContent,
         'timestamp': int(time.time()),
-        'parentId': ObjectId(parentId)
     }
     if parentId is not None:
         tweet['parentId'] = parentId

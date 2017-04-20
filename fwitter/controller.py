@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from json import loads
 import time
 
-from . import users, tweets
+from . import users, tweets, media
 
 def index(request):
     return render(request, 'fwitter/index.html')
@@ -228,11 +228,24 @@ def getUserFollowing(request, username):
 def addmedia(request):
     if request.method == "POST":
         try:
-            contentsStr = request.FILES['content'].read()
+            contents = request.FILES['content'].read()
         except:
             return JsonResponse({'status': 'error', 'error': 'addmedia - content key error'})
 
-        mediaContents = bytearray(contentsStr)
-        
+        mediaId = media.add(contents)
+        if mediaId is not None:
+            return JsonResponse({'status': 'OK', 'id': mediaId})
+        else:
+            return JsonResponse({'status': 'error', 'error': 'addmedia - insertion didn\'t work'})
     else:
-        return JsonResponse({'status': 'error', 'error': 'following - request is not GET'})
+        return JsonResponse({'status': 'error', 'error': 'addmedia - request is not POST'})
+
+def getmedia(request, mediaId):
+    if request.method == "GET":
+        mediaBinary = media.get(mediaId)
+        if mediaBinary is not None:
+            return HttpResponse(mediaBinary, content_type='image/jpeg')
+        else:
+            JsonResponse({'status': 'error', 'error': 'getmedia - mediaId: {0} not found'.format(mediaId)})
+    else:
+        return JsonResponse({'status': 'error', 'error': 'getmedia - request is not GET'})
