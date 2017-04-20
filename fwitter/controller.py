@@ -163,7 +163,7 @@ def search(request):
         return JsonResponse({'status': 'error', 'error': 'search - request is not POST'})
 
     tweetList = tweets.search(username, timestamp, limit, query, filterUsername, following, parentId, replies)
-    log.debug("Search Result length: " + len(tweetList))
+    log.debug("Search Result length: {0}".format(len(tweetList)))
     return JsonResponse({
         'status': 'OK',
         'items': tweetList
