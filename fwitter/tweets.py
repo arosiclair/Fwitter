@@ -79,7 +79,7 @@ def search(username, timestamp, limit, query, filtername, following, parentId, r
         filter['parentId'] = {'$exists': False}
 
     if rank == 'time':
-        results = tweets.find(filter, limit=limit).sort({'timestamp': -1})
+        results = tweets.find(filter, limit=limit).sort([('timestamp', -1)])
     else:
         results = tweets.find(filter, limit=limit)
 
