@@ -4,7 +4,7 @@ from bson.objectid import ObjectId
 
 import time, sys
 
-from . import users
+from . import users, media
 from utils import *
 
 tweets = MongoClient(mongoDBUri)['Fwitter']['Tweets']
@@ -44,7 +44,10 @@ def get(tweetId):
 def delete(userId, tweetId):
     result = tweets.find_one_and_delete({'_id': ObjectId(tweetId), 'userId': userId})
     if result is not None:
-        return True
+        if media.delete(result['media']):
+            return True
+        else:
+            return False
 
 def search(username, timestamp, limit, query, filtername, following, parentId, replies):
     filter = {'timestamp': {'$lte': timestamp}}

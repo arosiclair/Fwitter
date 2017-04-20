@@ -13,3 +13,13 @@ def add(bytes):
 
 def get(mediaId):
     return media.find_one({'_id': ObjectId(mediaId)})
+
+def delete(mediaIds):
+    for i in xrange(0, len(mediaIds)):
+        mediaIds[i] = ObjectId(mediaIds[i])
+
+    result = media.delete_many({'_id': {'$in': mediaIds}})
+    if result.acknowledged and result.deleted_count == len(mediaIds):
+        return True
+    else:
+        return False

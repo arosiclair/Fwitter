@@ -139,7 +139,7 @@ def deleteitem(request, tweetId):
         return JsonResponse({'status': 'OK'})
     else:
         return JsonResponse({'status': 'error',
-                             'error': 'delete - tweetId {0} from user {1} was not found'.format(tweetId, userId)})
+                             'error': 'delete - tweetId {0} from user {1} something went wrong'.format(tweetId, userId)})
 
 def search(request):
     username = request.session.get('username', None)
