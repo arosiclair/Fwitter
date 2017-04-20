@@ -119,8 +119,8 @@ MONGODB_DATABASES = {
     "default": {
         "name": utils.mdbName,
         "host": utils.mdbHost,
-        "password": utils.mdbPass,
-        "username": utils.mdbUser,
+        # "password": utils.mdbPass,
+        # "username": utils.mdbUser,
     },
 }
 
