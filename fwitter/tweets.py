@@ -73,11 +73,13 @@ def search(username, timestamp, limit, query, filtername, following, parentId, r
     filter['parentId'] = {'$exists': True} if replies else {'$exists': False}
 
     results = tweets.find(filter, limit=limit)
+    tweetList = []
     for tweet in results:
         tweet['id'] = str(tweet['_id'])
         del tweet['_id']
+        tweetList.append(tweet)
 
-    return results
+    return tweetList
 
 def likeTweet(tweetId, like):
     incr = 1 if like else -1
