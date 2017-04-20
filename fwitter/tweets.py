@@ -75,7 +75,8 @@ def search(username, timestamp, limit, query, filtername, following, parentId, r
     if parentId is not None:
         filter['parentId'] = parentId
 
-    filter['parentId'] = {'$exists': True} if replies else {'$exists': False}
+    if not replies:
+        filter['parentId'] = {'$exists': False}
 
     results = tweets.find(filter, limit=limit)
     tweetList = []
