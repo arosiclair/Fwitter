@@ -17,7 +17,7 @@ def add(userId, username, tweetContent, parentId, mediaIds):
         'timestamp': int(time.time()),
     }
     if parentId is not None:
-        tweet['parentId'] = parentId
+        tweet['parent'] = parentId
     if mediaIds is not None:
         tweet['media'] = mediaIds
 
@@ -73,10 +73,10 @@ def search(username, timestamp, limit, query, filtername, following, parentId, r
         filter['$text'] = {'$search': query}
 
     if parentId is not None:
-        filter['parentId'] = parentId
+        filter['parent'] = parentId
 
     if not replies:
-        filter['parentId'] = {'$exists': False}
+        filter['parent'] = {'$exists': False}
 
     if rank == 'time':
         results = tweets.find(filter, limit=limit).sort([('timestamp', -1)])
