@@ -54,7 +54,7 @@ def delete(userId, tweetId):
     else:
         return False
 
-def search(username, timestamp, limit, query, filtername, following, parentId, replies):
+def search(username, timestamp, limit, query, filtername, following, parentId, replies, rank):
     filter = {'timestamp': {'$lte': timestamp}}
 
     if following:
@@ -78,7 +78,11 @@ def search(username, timestamp, limit, query, filtername, following, parentId, r
     if not replies:
         filter['parentId'] = {'$exists': False}
 
-    results = tweets.find(filter, limit=limit)
+    if rank == 'time':
+        results = tweets.find(filter, limit=limit).sort({'timestamp': -1})
+    else:
+        results = tweets.find(filter, limit=limit)
+
     tweetList = []
     for tweet in results:
         tweet['id'] = str(tweet['_id'])

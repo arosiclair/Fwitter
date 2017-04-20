@@ -159,10 +159,11 @@ def search(request):
         following = content.get('following', True)
         parentId = content.get('parent', None)
         replies = content.get('replies', True)
+        rank = content.get('rank', 'interest')
     else:
         return JsonResponse({'status': 'error', 'error': 'search - request is not POST'})
 
-    tweetList = tweets.search(username, timestamp, limit, query, filterUsername, following, parentId, replies)
+    tweetList = tweets.search(username, timestamp, limit, query, filterUsername, following, parentId, replies, rank)
     log.debug("Search Result length: {0}".format(len(tweetList)))
     return JsonResponse({
         'status': 'OK',
