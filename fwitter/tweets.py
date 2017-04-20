@@ -81,7 +81,7 @@ def search(username, timestamp, limit, query, filtername, following, parentId, r
     if rank == 'time':
         results = tweets.find(filter, limit=limit).sort([('timestamp', -1)])
     else:
-        results = tweets.find(filter, limit=limit)
+        results = tweets.find(filter, limit=limit).sort([('likes', -1)])
 
     tweetList = []
     for tweet in results:
