@@ -39,6 +39,10 @@ def get(tweetId):
     if result is not None:
         del result['_id']
         result['id'] = tweetId
+        try:
+            result['parent'] = str(result['parent'])
+        except KeyError:
+            pass
         return result
 
 def delete(userId, tweetId):
@@ -87,6 +91,10 @@ def search(username, timestamp, limit, query, filtername, following, parentId, r
     for tweet in results:
         tweet['id'] = str(tweet['_id'])
         del tweet['_id']
+        try:
+            tweet['parent'] = str(tweet['parent'])
+        except KeyError:
+            pass
         tweetList.append(tweet)
 
     return tweetList
