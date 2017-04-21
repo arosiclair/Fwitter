@@ -17,7 +17,7 @@ def add(userId, username, tweetContent, parentId, mediaIds):
         'timestamp': int(time.time()),
     }
     if parentId is not None:
-        tweet['parent'] = parentId
+        tweet['parent'] = ObjectId(parentId)
     if mediaIds is not None:
         tweet['media'] = mediaIds
 
@@ -73,7 +73,7 @@ def search(username, timestamp, limit, query, filtername, following, parentId, r
         filter['$text'] = {'$search': query}
 
     if parentId is not None:
-        filter['parent'] = parentId
+        filter['parent'] = ObjectId(parentId)
 
     if not replies:
         filter['parent'] = {'$exists': False}
