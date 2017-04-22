@@ -149,7 +149,7 @@ def search(request):
 
     if request.method == "POST":
         content = loads(request.body)
-        log.debug("Search - " + str(content))
+        #log.debug("Search - " + str(content))
         timestamp = content.get('timestamp', int(time.time()))
         limit = content.get('limit', 25)
         if limit < 0 or limit > 100:
@@ -164,7 +164,7 @@ def search(request):
         return JsonResponse({'status': 'error', 'error': 'search - request is not POST'})
 
     tweetList = tweets.search(username, timestamp, limit, query, filterUsername, following, parentId, replies, rank)
-    log.debug("Search Result length: {0}".format(len(tweetList)))
+    #log.debug("Search Result length: {0}".format(len(tweetList)))
     return JsonResponse({
         'status': 'OK',
         'items': tweetList

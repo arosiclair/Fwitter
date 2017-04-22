@@ -53,7 +53,7 @@ LOGGING = {
             'class':'logging.handlers.RotatingFileHandler',
             # IMPORTANT: replace with your desired logfile name!
             'filename': os.path.join(BASE_DIR, 'djangoproject.log'),
-            'maxBytes': 100 * 10**6, # will 50 MB do?
+            'maxBytes': 1000 * 10**6, # will 50 MB do?
             'backupCount': 3, # keep this many extra historical files
             'formatter': 'timestampthread'
         },
