@@ -1,2 +1,0 @@
-# Fwitter
-A Twitter Clone
