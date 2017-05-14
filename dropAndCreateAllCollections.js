@@ -10,9 +10,9 @@ db.createCollection("Users");
 db.createCollection("Tweets");
 db.createCollection("django_session");
 
-sh.shardCollection("Fwitter.Users", { "_id" : 1 } );
-sh.shardCollection("Fwitter.Tweets", { "_id" : 1 } );
-sh.shardCollection("Fwitter.django_session", { "_id" : 1 } );
+sh.shardCollection("Fwitter.Users", { "_id" : "hashed" } );
+sh.shardCollection("Fwitter.Tweets", { "_id" : "hashed" } );
+sh.shardCollection("Fwitter.django_session", { "_id" : "hashed" } );
 
 db.Tweets.createIndex({ "timestamp": -1 });
 db.Tweets.createIndex({ "likes": -1 });
