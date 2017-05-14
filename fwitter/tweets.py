@@ -82,32 +82,23 @@ def search(username, timestamp, limit, query, filtername, following, parentId, r
     if not replies:
         filter['parent'] = {'$exists': False}
 
+    if query is not None:
+        filter['$text'] = {'$search': query}
+
     if rank == 'time':
         results = tweets.find(filter, limit=limit).sort([('timestamp', -1)])
     else:
         results = tweets.find(filter, limit=limit).sort([('likes', -1)])
 
     tweetList = []
-    if query is not None:
-        for tweet in results:
-            if query not in tweet['content']:
-                continue
-            tweet['id'] = str(tweet['_id'])
-            del tweet['_id']
-            try:
-                tweet['parent'] = str(tweet['parent'])
-            except KeyError:
-                pass
-            tweetList.append(tweet)
-    else:
-        for tweet in results:
-            tweet['id'] = str(tweet['_id'])
-            del tweet['_id']
-            try:
-                tweet['parent'] = str(tweet['parent'])
-            except KeyError:
-                pass
-            tweetList.append(tweet)
+    for tweet in results:
+        tweet['id'] = str(tweet['_id'])
+        del tweet['_id']
+        try:
+            tweet['parent'] = str(tweet['parent'])
+        except KeyError:
+            pass
+        tweetList.append(tweet)
 
     return tweetList
 
