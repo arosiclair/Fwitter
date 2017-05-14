@@ -14,4 +14,7 @@ sh.shardCollection("Fwitter.Users", { "_id" : 1 } );
 sh.shardCollection("Fwitter.Tweets", { "_id" : 1 } );
 sh.shardCollection("Fwitter.django_session", { "_id" : 1 } );
 
-//TODO: Recreate indexes
+db.Tweets.createIndex({ "timestamp", -1 });
+db.Tweets.createIndex({ "likes", -1 });
+db.Tweets.createIndex({ "parent", 1 });
+db.Tweets.createIndex({ "content", "text"});
