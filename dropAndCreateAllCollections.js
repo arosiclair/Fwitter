@@ -24,4 +24,4 @@ db = conn.getDB("Fwitter");
 
 db.Media.drop();
 db.createCollection("Media");
-sh.shardCollection("Fwitter.Media" { "_id": "hashed" });
+sh.shardCollection("Fwitter.Media", { "_id": "hashed" });
