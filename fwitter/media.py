@@ -4,7 +4,7 @@ from bson.binary import Binary
 
 from utils import *
 
-media = MongoClient(mediaUri)['Fwitter']['Media']
+media = MongoClient(mongoDBUri)['Fwitter']['Media']
 
 def add(bytes):
     result = media.insert_one({'content': Binary(bytes)})
