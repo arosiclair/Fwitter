@@ -19,7 +19,7 @@ db.Tweets.createIndex({ "likes": -1 });
 db.Tweets.createIndex({ "parent": 1 });
 db.Tweets.createIndex({ "content": "text"});
 
-conn = new Mongo("192.168.1.80:27017");
+conn = new Mongo("localhost:27020");
 db = conn.getDB("Fwitter");
 
 db.Media.drop();
