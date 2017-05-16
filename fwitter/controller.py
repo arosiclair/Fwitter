@@ -12,7 +12,10 @@ def index(request):
 
 def adduser(request):
     if request.method == "POST":
-        content = loads(request.body)
+        try:
+            content = loads(request.body)
+        except:
+            return JsonResponse({'status': 'error', 'error': 'Failed to parse JSON body'})
         try:
             name = content['username']
             email = content['email']
@@ -31,7 +34,10 @@ def adduser(request):
 
 def verify(request):
     if request.method == "POST":
-        content = loads(request.body)
+        try:
+            content = loads(request.body)
+        except:
+            return JsonResponse({'status': 'error', 'error': 'Failed to parse JSON body'})
         try:
             email = content['email']
             key = content['key']
@@ -48,7 +54,10 @@ def verify(request):
 
 def login(request):
     if request.method == "POST":
-        content = loads(request.body)
+        try:
+            content = loads(request.body)
+        except:
+            return JsonResponse({'status': 'error', 'error': 'Failed to parse JSON body'})
         try:
             username = content['username']
             password = content['password']
@@ -83,7 +92,10 @@ def additem(request):
         return JsonResponse({'status': 'error', 'error': 'additem - user not logged in'})
 
     if request.method == "POST":
-        content = loads(request.body)
+        try:
+            content = loads(request.body)
+        except:
+            return JsonResponse({'status': 'error', 'error': 'Failed to parse JSON body'})
         try:
             tweetContent = content['content']
             parent = content.get('parent', None)
@@ -120,7 +132,10 @@ def likeitem(request, tweetId):
         return JsonResponse({'status': 'error', 'error': 'likeitem - user not logged in'})
 
     if request.method == "POST":
-        content = loads(request.body)
+        try:
+            content = loads(request.body)
+        except:
+            return JsonResponse({'status': 'error', 'error': 'Failed to parse JSON body'})
         like = content.get('like', True)
 
         if tweets.likeTweet(tweetId, like):
@@ -148,7 +163,10 @@ def search(request):
         return JsonResponse({'status': 'error', 'error': 'search - user not logged in'})
 
     if request.method == "POST":
-        content = loads(request.body)
+        try:
+            content = loads(request.body)
+        except:
+            return JsonResponse({'status': 'error', 'error': 'Failed to parse JSON body'})
         #log.debug("Search - " + str(content))
         timestamp = content.get('timestamp', int(time.time()))
         limit = content.get('limit', 25)
@@ -176,7 +194,10 @@ def follow(request):
         return JsonResponse({'status': 'error', 'error': 'follow - user not logged in'})
 
     if request.method == "POST":
-        content = loads(request.body)
+        try:
+            content = loads(request.body)
+        except:
+            return JsonResponse({'status': 'error', 'error': 'Failed to parse JSON body'})
         try:
             username = content['username']
         except KeyError:
