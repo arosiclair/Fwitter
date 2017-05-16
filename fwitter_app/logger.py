@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 if DEBUG:
     min_level = 'DEBUG'
 else:
-    min_level = 'INFO'
+    min_level = 'WARNING'
 
 # the minimum reported level for Django's modules
 # optionally set to DEBUG to see database queries etc.
